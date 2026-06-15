@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Solunode</title>
+  <meta
+    name="description"
+    content="もっと遠くへ、もっと自由に。KAZ、SAYAKA、Solunodeの導線を上品に束ねた総合トップページ。"
+  >
+  <style>
+    :root {
+      --bg: #0c0c0b;
+      --text-main: #f6f2eb;
+      --text-soft: rgba(246, 242, 235, 0.76);
+      --text-faint: rgba(246, 242, 235, 0.56);
+      --line: rgba(255, 255, 255, 0.28);
+      --line-soft: rgba(255, 255, 255, 0.14);
+      --panel: rgba(8, 8, 8, 0.18);
+      --panel-strong: rgba(8, 8, 8, 0.32);
+      --shadow: 0 32px 90px rgba(0, 0, 0, 0.34);
+      --font-sans: "Aptos", "Yu Gothic UI", "Hiragino Sans", sans-serif;
+      --font-serif: "Times New Roman", "Yu Mincho", "Hiragino Mincho ProN", serif;
+      --directory-image: url("./assets/hero-mobile.png");
+      --directory-position: 46% center;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .site-header {
+      position: fixed;
+      inset: 0 0 auto;
+      z-index: 30;
+      pointer-events: auto;
+    }
+
+    .site-header-inner {
+      width: min(100% - 28px, 1460px);
+      margin: 0 auto;
+      padding: 22px 0 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brandline {
+      font-family: var(--font-serif);
+      font-size: 0.96rem;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.88);
+      text-shadow: 0 6px 20px rgba(0, 0, 0, 0.24);
+    }
+
+    .menu-wrap {
+      position: relative;
+    }
+
+    .menu-button {
+      display: grid;
+      gap: 6px;
+      width: 40px;
+      height: 40px;
+      padding: 10px 6px;
+      border: 1px solid rgba(255, 255, 255, 0.34);
+      background: rgba(255, 255, 255, 0.08);
+      cursor: pointer;
+      transition: background 180ms ease, border-color 180ms ease;
+    }
+
+    .menu-button:hover,
+    .menu-button:focus-visible {
+      background: rgba(255, 255, 255, 0.16);
+      border-color: rgba(255, 255, 255, 0.54);
+    }
+
+    .menu-button span {
+      display: block;
+      height: 1px;
+      background: rgba(255, 255, 255, 0.88);
+    }
+
+    .menu-panel {
+      position: absolute;
+      top: calc(100% + 12px);
+      right: 0;
+      z-index: 50;
+      min-width: 220px;
+      padding: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.24);
+      background: rgba(12, 12, 11, 0.92);
+      box-shadow: 0 18px 48px rgba(0, 0, 0, 0.24);
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-8px);
+      transition: opacity 180ms ease, transform 180ms ease;
+    }
+
+    .menu-panel.is-open {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    .menu-nav {
+      display: grid;
+      gap: 14px;
+    }
+
+    .menu-nav a {
+      color: rgba(255, 255, 255, 0.9);
+      text-decoration: none;
+      font-family: var(--font-sans);
+      font-size: 0.98rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .menu-nav a:hover,
+    .menu-nav a:focus-visible {
+      color: #fff;
+    }
+
+    .page {
+      overflow: clip;
+    }
+
+    .intro {
+      position: relative;
+      min-height: 100svh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 120px 18px 56px;
+    }
+
+    .intro-slides,
+    .intro-overlay {
+      position: absolute;
+      inset: 0;
+    }
+
+    .intro-slides {
+      overflow: hidden;
+    }
+
+    .intro-slide {
+      position: absolute;
+      inset: -2%;
+      background-position: center center;
+      background-repeat: no-repeat;
+      background-size: cover;
+      opacity: 0;
+      transform: scale(1.03);
+      transition: opacity 1800ms ease, transform 7000ms ease;
+      will-change: opacity, transform;
+    }
+
+    .intro-slide.is-active {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .intro-overlay {
+      background:
+        radial-gradient(circle at 50% 28%, rgba(255, 255, 255, 0.08), transparent 26%),
+        linear-gradient(180deg, rgba(0, 0, 0, 0.34) 0%, rgba(0, 0, 0, 0.42) 42%, rgba(0, 0, 0, 0.74) 100%);
+      z-index: 1;
+    }
+
+    .intro-content {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      justify-items: center;
+      gap: 14px;
+      text-align: center;
+    }
+
+    .intro-sub,
+    .section-kicker,
+    .group-title,
+    .button-caption,
+    .footer-note {
+      margin: 0;
+    }
+
+    .intro-title {
+      margin: 0;
+      font-family: var(--font-serif);
+      font-size: clamp(2.8rem, 9vw, 6rem);
+      font-weight: 500;
+      letter-spacing: 0.16em;
+      line-height: 1.16;
+      text-indent: 0.16em;
+      text-wrap: balance;
+      text-shadow: 0 10px 32px rgba(0, 0, 0, 0.3);
+      opacity: 0;
+      transform: translateY(22px);
+    }
+
+    .intro-sub {
+      font-family: var(--font-serif);
+      font-size: clamp(0.9rem, 2vw, 1.08rem);
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--text-soft);
+      text-indent: 0.24em;
+      opacity: 0;
+      transform: translateY(16px);
+    }
+
+    body.is-ready .intro-title,
+    body.is-ready .intro-sub {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    body.is-ready .hero-scroll {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .intro-title {
+      transition: opacity 1200ms ease 260ms, transform 1200ms ease 260ms;
+    }
+
+    .intro-sub {
+      transition: opacity 1000ms ease 560ms, transform 1000ms ease 560ms;
+    }
+
+    .hero-scroll {
+      position: absolute;
+      left: 50%;
+      bottom: 28px;
+      z-index: 2;
+      display: grid;
+      justify-items: center;
+      gap: 10px;
+      transform: translateX(-50%) translateY(14px);
+      color: rgba(255, 255, 255, 0.72);
+      font-family: var(--font-serif);
+      font-size: 0.76rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      text-decoration: none;
+      opacity: 0;
+      transition: opacity 1000ms ease 980ms, transform 1000ms ease 980ms;
+    }
+
+    .hero-scroll::before {
+      content: "";
+      width: 1px;
+      height: 44px;
+      background: rgba(255, 255, 255, 0.42);
+    }
+
+    .directory {
+      position: relative;
+      min-height: 100svh;
+      padding: 96px 18px 34px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .directory::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(180deg, rgba(0, 0, 0, 0.52) 0%, rgba(0, 0, 0, 0.42) 26%, rgba(0, 0, 0, 0.74) 100%),
+        linear-gradient(90deg, rgba(0, 0, 0, 0.18) 0%, rgba(0, 0, 0, 0.22) 50%, rgba(0, 0, 0, 0.4) 100%),
+        var(--directory-image);
+      background-position: center, center, var(--directory-position);
+      background-repeat: no-repeat;
+      background-size: cover, cover, cover;
+    }
+
+    .directory::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 50% 24%, rgba(255, 255, 255, 0.06), transparent 26%),
+        linear-gradient(180deg, rgba(0, 0, 0, 0.06) 0%, rgba(0, 0, 0, 0.14) 40%, rgba(0, 0, 0, 0.24) 100%);
+      pointer-events: none;
+    }
+
+    .directory-inner {
+      position: relative;
+      z-index: 1;
+      width: min(100%, 1180px);
+      display: grid;
+      gap: 28px;
+      justify-items: center;
+      text-align: center;
+    }
+
+    .directory-heading {
+      display: grid;
+      gap: 10px;
+      max-width: 48rem;
+    }
+
+    .section-kicker {
+      font-family: var(--font-serif);
+      font-size: 0.8rem;
+      letter-spacing: 0.26em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.74);
+      text-indent: 0.26em;
+    }
+
+    .directory-heading h2 {
+      margin: 0;
+      font-family: var(--font-serif);
+      font-size: clamp(2rem, 5vw, 3.3rem);
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-indent: 0.12em;
+      line-height: 1.24;
+      text-wrap: balance;
+    }
+
+    .directory-heading p {
+      margin: 0;
+      color: var(--text-soft);
+      font-family: var(--font-sans);
+      font-size: 0.95rem;
+      line-height: 1.9;
+      white-space: pre-line;
+    }
+
+    .link-panel {
+      width: min(100%, 540px);
+      padding: 22px 18px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0.2));
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+
+    .group {
+      display: grid;
+      gap: 14px;
+      margin-top: 22px;
+    }
+
+    .group:first-child {
+      margin-top: 0;
+    }
+
+    .group-head {
+      display: grid;
+      grid-template-columns: 78px auto 78px;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .group-head::before,
+    .group-head::after {
+      content: "";
+      display: block;
+      height: 1px;
+      background: var(--line-soft);
+    }
+
+    .group-title {
+      font-family: var(--font-serif);
+      font-size: 1rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      text-indent: 0.14em;
+      white-space: nowrap;
+    }
+
+    .group-meta {
+      margin: -4px 0 2px;
+      color: var(--text-faint);
+      font-family: var(--font-sans);
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+      line-height: 1.7;
+      text-align: center;
+    }
+
+    .button-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .link-button {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      min-height: 50px;
+      padding: 12px 18px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      text-decoration: none;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+      transition: background 180ms ease, border-color 180ms ease, transform 180ms ease;
+    }
+
+    .link-button:hover,
+    .link-button:focus-visible {
+      background: var(--panel-strong);
+      border-color: rgba(255, 255, 255, 0.46);
+      transform: translateY(-1px);
+    }
+
+    .button-icon {
+      width: 28px;
+      height: 28px;
+      flex-shrink: 0;
+      display: grid;
+      place-items: center;
+    }
+
+    .button-icon img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .button-icon.note img {
+      filter: invert(1);
+    }
+
+    .button-icon.base img {
+      width: 32px;
+      height: 32px;
+    }
+
+    .button-icon.portfolio img {
+      width: 30px;
+      height: 30px;
+      object-fit: contain;
+      object-position: center;
+      filter: none;
+    }
+
+    .button-copy {
+      width: 100%;
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .button-name {
+      margin: 0;
+      font-family: var(--font-sans);
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+    }
+
+    .button-caption {
+      font-family: var(--font-sans);
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-faint);
+      white-space: nowrap;
+    }
+
+    .footer-note {
+      color: rgba(255, 255, 255, 0.62);
+      font-family: var(--font-serif);
+      font-size: 0.74rem;
+      letter-spacing: 0.08em;
+      line-height: 1.8;
+    }
+
+    .contact-panel {
+      width: min(100%, 860px);
+      padding: 26px 22px;
+      border: 0;
+      background: transparent;
+      box-shadow: none;
+      backdrop-filter: none;
+    }
+
+    .contact-heading {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 22px;
+      text-align: center;
+    }
+
+    .contact-heading h3,
+    .contact-item h4,
+    .contact-item p {
+      margin: 0;
+    }
+
+    .contact-heading h3 {
+      font-family: var(--font-serif);
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-indent: 0.08em;
+    }
+
+    .contact-heading p {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.8);
+      font-family: var(--font-sans);
+      line-height: 1.9;
+    }
+
+    .contact-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .contact-item {
+      display: grid;
+      gap: 8px;
+      padding: 8px 0;
+      border: 0;
+      background: transparent;
+      text-align: left;
+    }
+
+    .contact-item h4 {
+      font-family: var(--font-serif);
+      font-size: 1.02rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .contact-note {
+      color: rgba(255, 255, 255, 0.68);
+      font-family: var(--font-sans);
+      font-size: 0.86rem;
+      line-height: 1.7;
+    }
+
+    .contact-mail {
+      width: fit-content;
+      padding: 0;
+      border: 0;
+      color: rgba(255, 255, 255, 0.94);
+      font-family: var(--font-sans);
+      background: transparent;
+      text-decoration: none;
+      transition: opacity 180ms ease, transform 180ms ease;
+    }
+
+    .contact-mail:hover,
+    .contact-mail:focus-visible {
+      opacity: 0.76;
+      transform: translateY(-1px);
+    }
+
+    @media (min-width: 900px) {
+      :root {
+        --directory-image: url("./assets/hero-desktop.png");
+        --directory-position: 42% center;
+      }
+
+      .site-header-inner {
+        width: min(100% - 56px, 1460px);
+        padding-top: 26px;
+      }
+
+      .intro {
+        padding-left: 28px;
+        padding-right: 28px;
+      }
+
+      .directory {
+        padding-left: 28px;
+        padding-right: 28px;
+      }
+
+      .link-panel {
+        padding: 26px 28px;
+      }
+
+      .contact-panel {
+        padding: 30px 32px;
+      }
+
+      .contact-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      .intro-slide,
+      .intro-title,
+      .intro-sub,
+      .hero-scroll,
+      .link-button {
+        transition: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="site-header-inner">
+      <div class="brandline">KAZ &amp; SAYAKA</div>
+      <div class="menu-wrap">
+        <button class="menu-button" type="button" aria-expanded="false" aria-controls="menu-panel" aria-label="Open menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        <div class="menu-panel" id="menu-panel">
+          <nav class="menu-nav">
+            <a href="#home">Home</a>
+            <a href="#directory">Links</a>
+            <a href="#contact">Contact</a>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="page" id="home">
+    <section class="intro" aria-label="Intro visual">
+      <div class="intro-slides" aria-hidden="true">
+        <div class="intro-slide is-active" style="background-image: url('./assets/intro-slide-1.jpg');"></div>
+        <div class="intro-slide" style="background-image: url('./assets/intro-slide-2.jpg');"></div>
+      </div>
+      <div class="intro-overlay" aria-hidden="true"></div>
+
+      <div class="intro-content">
+        <h1 class="intro-title">もっと遠くへ、<br />もっと自由に。</h1>
+        <p class="intro-sub">KAZ &amp; SAYAKA</p>
+      </div>
+
+      <a class="hero-scroll" href="#directory">Scroll</a>
+    </section>
+
+    <section class="directory" id="directory" aria-label="Link directory">
+      <div class="directory-inner">
+        <div class="directory-heading">
+          <p class="section-kicker">Directory</p>
+          <h2>Links</h2>
+          <p>歩いた道のりも、
+日常の小さな気づきも。
+ここから、それぞれの物語へ。</p>
+        </div>
+
+        <div class="link-panel">
+          <section class="group" aria-labelledby="kaz-heading">
+            <div class="group-head">
+              <h3 class="group-title" id="kaz-heading">KAZ</h3>
+            </div>
+            <p class="group-meta">Creative Director / Photographer / Videographer</p>
+            <div class="button-list">
+              <a class="link-button" href="https://www.instagram.com/kazkaz9n/" aria-label="KAZ Instagram" target="_blank" rel="noreferrer">
+                <span class="button-icon">
+                  <img src="./assets/instagram-icon.png" alt="">
+                </span>
+                <span class="button-copy">
+                  <span class="button-name">Instagram</span>
+                  <span class="button-caption">KAZ</span>
+                </span>
+              </a>
+              <a class="link-button" href="https://note.com/kazkaz9n" aria-label="KAZ Note" target="_blank" rel="noreferrer">
+                <span class="button-icon note">
+                  <img src="./assets/note-icon.png" alt="">
+                </span>
+                <span class="button-copy">
+                  <span class="button-name">Note</span>
+                  <span class="button-caption">KAZ</span>
+                </span>
+              </a>
+              <a class="link-button" href="https://kazuki-kphoto.myportfolio.com/" aria-label="KAZ Portfolio" target="_blank" rel="noreferrer">
+                <span class="button-icon portfolio">
+                  <img src="./assets/portfolio-icon.png" alt="">
+                </span>
+                <span class="button-copy">
+                  <span class="button-name">Portfolio</span>
+                  <span class="button-caption">KAZ</span>
+                </span>
+              </a>
+            </div>
+          </section>
+
+          <section class="group" aria-labelledby="sayaka-heading">
+            <div class="group-head">
+              <h3 class="group-title" id="sayaka-heading">SAYAKA</h3>
+            </div>
+            <p class="group-meta">Influencer</p>
+            <div class="button-list">
+              <a class="link-button" href="https://www.instagram.com/sayaka_0802/" aria-label="SAYAKA Instagram" target="_blank" rel="noreferrer">
+                <span class="button-icon">
+                  <img src="./assets/instagram-icon.png" alt="">
+                </span>
+                <span class="button-copy">
+                  <span class="button-name">Instagram</span>
+                  <span class="button-caption">SAYAKA</span>
+                </span>
+              </a>
+              <a class="link-button" href="https://www.youtube.com/@sayaka_0802" aria-label="SAYAKA YouTube" target="_blank" rel="noreferrer">
+                <span class="button-icon">
+                  <img src="./assets/youtube-icon.png" alt="">
+                </span>
+                <span class="button-copy">
+                  <span class="button-name">YouTube</span>
+                  <span class="button-caption">SAYAKA</span>
+                </span>
+              </a>
+              <a class="link-button" href="https://note.com/sayaka_0802" aria-label="SAYAKA Note" target="_blank" rel="noreferrer">
+                <span class="button-icon note">
+                  <img src="./assets/note-icon.png" alt="">
+                </span>
+                <span class="button-copy">
+                  <span class="button-name">Note</span>
+                  <span class="button-caption">SAYAKA</span>
+                </span>
+              </a>
+            </div>
+          </section>
+
+          <section class="group" aria-labelledby="solunode-heading">
+            <div class="group-head">
+              <h3 class="group-title" id="solunode-heading">SOLUNODE</h3>
+            </div>
+            <p class="group-meta">Outdoor &amp; Life Brand</p>
+            <div class="button-list">
+              <a class="link-button" href="https://www.instagram.com/solunode/" aria-label="Solunode Instagram" target="_blank" rel="noreferrer">
+                <span class="button-icon">
+                  <img src="./assets/instagram-icon.png" alt="">
+                </span>
+                <span class="button-copy">
+                  <span class="button-name">Instagram</span>
+                  <span class="button-caption">SOLUNODE</span>
+                </span>
+              </a>
+              <a class="link-button" href="https://solunode.official.ec/" aria-label="Solunode BASE Shop" target="_blank" rel="noreferrer">
+                <span class="button-icon base">
+                  <img src="./assets/base-icon.png" alt="">
+                </span>
+                <span class="button-copy">
+                  <span class="button-name">BASE Shop</span>
+                  <span class="button-caption">SOLUNODE</span>
+                </span>
+              </a>
+            </div>
+          </section>
+        </div>
+
+        <div class="contact-panel" id="contact">
+          <div class="contact-heading">
+            <h3>Contact</h3>
+            <p>お仕事のご依頼・お問い合わせは、各窓口までご連絡ください。</p>
+          </div>
+
+          <div class="contact-grid">
+            <article class="contact-item">
+              <h4>KAZ</h4>
+              <p class="contact-note">お仕事のご依頼はこちら</p>
+              <a class="contact-mail" href="mailto:k.kazuki1201@gmail.com">k.kazuki1201@gmail.com</a>
+            </article>
+
+            <article class="contact-item">
+              <h4>SAYAKA</h4>
+              <p class="contact-note">お仕事のご依頼はこちら</p>
+              <a class="contact-mail" href="mailto:kogachan.8246@gmail.com">kogachan.8246@gmail.com</a>
+            </article>
+
+            <article class="contact-item">
+              <h4>Solunode</h4>
+              <p class="contact-note">ブランド・商品に関するお問い合わせ</p>
+              <a class="contact-mail" href="mailto:solunode.official@gmail.com">solunode.official@gmail.com</a>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    (() => {
+      const slides = Array.from(document.querySelectorAll(".intro-slide"));
+      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const menuButton = document.querySelector(".menu-button");
+      const menuPanel = document.querySelector(".menu-panel");
+      const menuLinks = document.querySelectorAll(".menu-panel a");
+
+      window.addEventListener("DOMContentLoaded", () => {
+        document.body.classList.add("is-ready");
+      });
+
+      if (menuButton && menuPanel) {
+        const setMenuOpen = (isOpen) => {
+          menuPanel.classList.toggle("is-open", isOpen);
+          menuButton.setAttribute("aria-expanded", String(isOpen));
+        };
+
+        menuButton.addEventListener("click", () => {
+          const expanded = menuButton.getAttribute("aria-expanded") === "true";
+          setMenuOpen(!expanded);
+        });
+
+        menuLinks.forEach((link) => {
+          link.addEventListener("click", () => setMenuOpen(false));
+        });
+
+        document.addEventListener("click", (event) => {
+          const target = event.target;
+          if (!menuPanel.contains(target) && !menuButton.contains(target)) {
+            setMenuOpen(false);
+          }
+        });
+      }
+
+      if (slides.length < 2 || reducedMotion) {
+        return;
+      }
+
+      let currentIndex = 0;
+
+      window.setInterval(() => {
+        slides[currentIndex].classList.remove("is-active");
+        currentIndex = (currentIndex + 1) % slides.length;
+        slides[currentIndex].classList.add("is-active");
+      }, 5000);
+    })();
+  </script>
+</body>
+</html>
